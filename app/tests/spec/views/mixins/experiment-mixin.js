@@ -44,6 +44,7 @@ define(function (require, exports, module) {
         trigger: sinon.spy()
       };
       windowMock = new WindowMock();
+      windowMock = new WindowMock();
 
       view = new View({
         experiments,
