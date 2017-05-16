@@ -18,7 +18,9 @@ define((require, exports, module) => {
     let windowMock;
 
     beforeEach(() => {
-      account = {};
+      account = {
+        get: sinon.spy()
+      };
       metrics = new Metrics();
       windowMock = new WindowMock();
 
@@ -63,6 +65,20 @@ define((require, exports, module) => {
               assert.isFalse(metrics.setViewNamePrefix.called);
             });
         });
+      });
+    });
+
+    describe('afterCompleteSignUp', () => {
+      it('sets the metrics viewName prefix, resolves to a `ConnectAnotherDeviceBehavior`', () => {
+        sinon.spy(metrics, 'setViewNamePrefix');
+
+        return broker.afterCompleteSignUp(account)
+          .then((behavior) => {
+            assert.equal(behavior.type, 'connect-another-device');
+
+            assert.isTrue(metrics.setViewNamePrefix.calledOnce);
+            assert.isTrue(metrics.setViewNamePrefix.calledWith(''));
+          });
       });
     });
   });

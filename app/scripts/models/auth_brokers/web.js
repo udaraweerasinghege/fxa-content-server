@@ -22,7 +22,27 @@ define(function (require, exports, module) {
     success: t('Account verified successfully')
   });
 
+  function redirectToSettingsIfSignedIn(brokerMethod) {
+    return function (account) {
+      return proto[brokerMethod].call(this, account)
+        .then((defaultBehavior) => {
+          return account.isSignedIn()
+            .then((isSignedIn) => {
+              if (isSignedIn) {
+                return redirectToSettingsBehavior;
+              } else {
+                return defaultBehavior;
+              }
+            });
+        });
+    };
+  }
+
   module.exports = BaseBroker.extend({
+    afterCompleteAddSecondaryEmail: redirectToSettingsIfSignedIn('afterCompleteAddSecondaryEmail'),
+    afterCompleteSignIn: redirectToSettingsIfSignedIn('afterCompleteSignIn'),
+    afterCompleteSignUp: redirectToSettingsIfSignedIn('afterCompleteSignUp'),
+
     defaultBehaviors: _.extend({}, proto.defaultBehaviors, {
       afterCompleteResetPassword: redirectToSettingsBehavior,
       afterResetPasswordConfirmationPoll: redirectToSettingsBehavior,

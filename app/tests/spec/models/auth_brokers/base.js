@@ -219,13 +219,13 @@ define(function (require, exports, module) {
     });
 
     describe('afterCompleteSignUp', function () {
-      beforeEach(function () {
+      it('unpersistVerificationDatas data, navigates', function () {
         sinon.spy(broker, 'unpersistVerificationData');
-        return broker.afterCompleteSignUp(account);
-      });
-
-      it('unpersistVerificationDatas data', function () {
-        assert.isTrue(broker.unpersistVerificationData.calledWith(account));
+        return broker.afterCompleteSignUp(account)
+          .then(testNavigates('signup_verified'))
+          .then(() => {
+            assert.isTrue(broker.unpersistVerificationData.calledWith(account));
+          });
       });
     });
 
@@ -254,6 +254,33 @@ define(function (require, exports, module) {
       it('returns a promise, behavior navigates to signin_confirmed', function () {
         return broker.afterSignInConfirmationPoll(account)
           .then(testNavigates('signin_confirmed'));
+      });
+    });
+
+    describe('afterCompleteSignIn', function () {
+      it('unpersistVerificationDatas data, navigates', function () {
+        sinon.spy(broker, 'unpersistVerificationData');
+        sinon.spy(metrics, 'logEvent');
+        return broker.afterCompleteSignIn(account)
+          .then(testNavigates('signin_verified'))
+          .then(() => {
+            assert.isTrue(broker.unpersistVerificationData.calledOnce);
+            assert.isTrue(broker.unpersistVerificationData.calledWith(account));
+
+            assert.isTrue(metrics.logEvent.calledOnce);
+            assert.isTrue(metrics.logEvent.calledWith('signin.success'));
+          });
+      });
+    });
+
+    describe('afterCompleteAddSecondaryEmail', function () {
+      it('unpersistVerificationDatas data, navigates', function () {
+        sinon.spy(broker, 'unpersistVerificationData');
+        return broker.afterCompleteAddSecondaryEmail(account)
+          .then(testNavigates('secondary_email_verified'))
+          .then(() => {
+            assert.isTrue(broker.unpersistVerificationData.calledWith(account));
+          });
       });
     });
 
