@@ -1127,6 +1127,13 @@ define(function (require, exports, module) {
       );
     },
 
+    setPrimaryEmail (email) {
+      return this._fxaClient.setPrimaryEmail(
+        this.get('sessionToken'),
+        email
+      );
+    },
+
     /**
      * Get emails associated with user.
      *

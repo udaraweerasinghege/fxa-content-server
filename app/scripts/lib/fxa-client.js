@@ -682,6 +682,10 @@ define(function (require, exports, module) {
       return client.recoveryEmailResendCode(sessionToken, {email: email});
     }),
 
+    setPrimaryEmail: withClient((client, sessionToken, email) => {
+      return client.setPrimaryEmail(sessionToken, email);
+    }),
+
     /**
      * Check whether SMS is enabled for the user
      *

@@ -31,7 +31,8 @@ define(function (require, exports, module) {
     events: {
       'click .email-disconnect': preventDefaultThen('_onDisconnectEmail'),
       'click .email-refresh.enabled': preventDefaultThen('refresh'),
-      'click .resend': preventDefaultThen('resend')
+      'click .resend': preventDefaultThen('resend'),
+      'click .set-primary': preventDefaultThen('setPrimary')
     },
 
     initialize (options) {
@@ -123,6 +124,18 @@ define(function (require, exports, module) {
       return account.resendEmailCode(email)
         .then(() => {
           this.displaySuccess(Strings.interpolate(t('A verification link has been sent to %(email)s'), { email: email }), {
+            closePanel: false
+          });
+          this.navigate('/settings/emails');
+        });
+    },
+
+    setPrimary (event) {
+      const email = $(event.currentTarget).data('id');
+      const account = this.getSignedInAccount();
+      return account.setPrimaryEmail(email)
+        .then(() => {
+          this.displaySuccess(Strings.interpolate(t('Primary email set to %(email)s'), { email: email }), {
             closePanel: false
           });
           this.navigate('/settings/emails');
