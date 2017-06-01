@@ -436,7 +436,6 @@ define(function (require, exports, module) {
       return p().then(() => {
         var email = this.get('email');
         var sessionToken = this.get('sessionToken');
-
         if (password) {
           return this._fxaClient.signIn(email, password, relier, {
             metricsContext: this._metrics.getFlowEventMetadata(),
@@ -445,7 +444,8 @@ define(function (require, exports, module) {
             // if the email case is incorrect, handle it locally so the model
             // can be updated with the correct case.
             skipCaseError: true,
-            unblockCode: options.unblockCode
+            unblockCode: options.unblockCode,
+            originalLoginEmail: options.originalLoginEmail
           });
         } else if (sessionToken) {
           // We have a cached Sync session so just check that it hasn't expired.
@@ -461,6 +461,9 @@ define(function (require, exports, module) {
       })
       .fail((err) => {
         if (AuthErrors.is(err, 'INCORRECT_EMAIL_CASE')) {
+          // Save the original email that was used for login
+          options.originalLoginEmail = this.get('email')
+
           // The server will respond with the canonical email
           // for this account. Use it hereafter.
           this.set('email', err.email);

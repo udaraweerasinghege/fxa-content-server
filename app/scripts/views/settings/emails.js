@@ -135,6 +135,7 @@ define(function (require, exports, module) {
       const account = this.getSignedInAccount();
       return account.setPrimaryEmail(email)
         .then(() => {
+          // return this.request(this.getCommand('CAN_LINK_ACCOUNT'), { email })
           this.displaySuccess(Strings.interpolate(t('Primary email set to %(email)s'), { email: email }), {
             closePanel: false
           });

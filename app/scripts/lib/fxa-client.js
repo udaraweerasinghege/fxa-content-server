@@ -251,6 +251,10 @@ define(function (require, exports, module) {
         signInOptions.skipCaseError = options.skipCaseError;
       }
 
+      if (options.originalLoginEmail) {
+        signInOptions.originalLoginEmail = options.originalLoginEmail;
+      }
+
       setMetricsContext(signInOptions, options);
 
       return client.signIn(email, password, signInOptions)
