@@ -439,13 +439,13 @@ define(function (require, exports, module) {
         if (password) {
           return this._fxaClient.signIn(email, password, relier, {
             metricsContext: this._metrics.getFlowEventMetadata(),
+            originalLoginEmail: options.originalLoginEmail,
             reason: options.reason || SignInReasons.SIGN_IN,
             resume: options.resume,
             // if the email case is incorrect, handle it locally so the model
             // can be updated with the correct case.
             skipCaseError: true,
-            unblockCode: options.unblockCode,
-            originalLoginEmail: options.originalLoginEmail
+            unblockCode: options.unblockCode
           });
         } else if (sessionToken) {
           // We have a cached Sync session so just check that it hasn't expired.
