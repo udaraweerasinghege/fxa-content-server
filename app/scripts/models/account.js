@@ -433,8 +433,8 @@ define(function (require, exports, module) {
      * @returns {Promise} - resolves when complete
      */
     signIn (password, relier, options = {}) {
+      var email = this.get('email');
       return p().then(() => {
-        var email = this.get('email');
         var sessionToken = this.get('sessionToken');
         if (password) {
           return this._fxaClient.signIn(email, password, relier, {
@@ -462,7 +462,7 @@ define(function (require, exports, module) {
       .fail((err) => {
         if (AuthErrors.is(err, 'INCORRECT_EMAIL_CASE')) {
           // Save the original email that was used for login
-          options.originalLoginEmail = this.get('email')
+          options.originalLoginEmail = email;
 
           // The server will respond with the canonical email
           // for this account. Use it hereafter.
