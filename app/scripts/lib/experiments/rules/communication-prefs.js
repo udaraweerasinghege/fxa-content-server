@@ -23,7 +23,8 @@ define((require, exports, module) => {
         'id',
         'pl',
         'pt-br',
-        'ru'
+        'ru',
+        'zh-tw'
       ];
 
       // double quotes are used instead of single quotes to avoid an
